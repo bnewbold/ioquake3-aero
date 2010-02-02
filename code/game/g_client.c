@@ -497,14 +497,16 @@ respawn
 ================
 */
 void respawn( gentity_t *ent ) {
-	gentity_t	*tent;
+	//gentity_t	*tent;
+
+    // -bnewbold
 
 	CopyToBodyQue (ent);
 	ClientSpawn(ent);
 
-	// add a teleportation effect
-	tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
-	tent->s.clientNum = ent->s.clientNum;
+	// add a teleportation effect // disabled -bnewbold
+	//tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
+	//tent->s.clientNum = ent->s.clientNum;
 }
 
 /*
@@ -1241,6 +1243,9 @@ void ClientSpawn(gentity_t *ent) {
 
 	// clear entity state values
 	BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
+
+    // Get going! -bnewbold
+    trap_SendConsoleCommand( EXEC_APPEND, "+forward\n" );
 }
 
 

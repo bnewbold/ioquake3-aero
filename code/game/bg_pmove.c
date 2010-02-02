@@ -146,6 +146,7 @@ void PM_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce ) {
 	float	backoff;
 	float	change;
 	int		i;
+
 	
 	backoff = DotProduct (in, normal);
 	
@@ -159,6 +160,12 @@ void PM_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce ) {
 		change = normal[i]*backoff;
 		out[i] = in[i] - change;
 	}
+    // wall detect code -bnewbold
+    if(backoff < -.1 && backoff > -2000.0 && in[2] == 0) {
+        // Com_Printf("HITTING: %f, %f, %f, %f\n", backoff, in[1], out[1], out[2]);
+        // if(backoff < -25.0 && backoff > -50.0) Com_Printf("TELEPORT!\n");
+        trap_SendConsoleCommand( EXEC_APPEND, "randomteleport\n" );
+    }
 }
 
 
@@ -1808,6 +1815,8 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd ) {
 
 	// circularly clamp the angles with deltas
 	for (i=0 ; i<3 ; i++) {
+		//temp = cmd->angles[i] + ps->delta_angles[i];
+        // thirded for slowness... NOT -bnewbold
 		temp = cmd->angles[i] + ps->delta_angles[i];
 		if ( i == PITCH ) {
 			// don't let the player look up or down more than 90 degrees
@@ -1819,7 +1828,7 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd ) {
 				temp = -16000;
 			}
 		}
-		ps->viewangles[i] = SHORT2ANGLE(temp);
+		ps->viewangles[i] = SHORT2ANGLE(temp); // TODO: track this down to slow pans -bnewbold
 	}
 
 }

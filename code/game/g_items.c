@@ -51,12 +51,23 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	int			i;
 	gclient_t	*client;
 
-	if ( !other->client->ps.powerups[ent->item->giTag] ) {
+    // don't do most of this; just send hook -bnewbold
+    
+    switch(ent->item->giTag) {
+        case PW_QUAD:
+            trap_SendConsoleCommand( EXEC_APPEND, "dobsod\n" );
+        break;
+        case PW_HASTE:
+            trap_SendConsoleCommand( EXEC_APPEND, "doiframe\n" );
+        break;
+    }
+
+	//if ( !other->client->ps.powerups[ent->item->giTag] ) {
 		// round timing to seconds to make multiple powerup timers
 		// count in sync
-		other->client->ps.powerups[ent->item->giTag] = 
-			level.time - ( level.time % 1000 );
-	}
+	//	other->client->ps.powerups[ent->item->giTag] = 
+	//		level.time - ( level.time % 1000 );
+	//}
 
 	if ( ent->count ) {
 		quantity = ent->count;
@@ -64,7 +75,7 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 		quantity = ent->item->quantity;
 	}
 
-	other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
+	//other->client->ps.powerups[ent->item->giTag] += quantity * 1000;
 
 	// give any nearby players a "denied" anti-reward
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
@@ -331,10 +342,12 @@ int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 		other->client->ps.stats[STAT_ARMOR] = upperBound;
 	}
 #else
-	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
-	if ( other->client->ps.stats[STAT_ARMOR] > other->client->ps.stats[STAT_MAX_HEALTH] * 2 ) {
-		other->client->ps.stats[STAT_ARMOR] = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
-	}
+    // addpoint  -bnewbold
+    trap_SendConsoleCommand( EXEC_APPEND, "addpoint\n" );
+	//other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
+	//if ( other->client->ps.stats[STAT_ARMOR] > other->client->ps.stats[STAT_MAX_HEALTH] * 2 ) {
+//		other->client->ps.stats[STAT_ARMOR] = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
+//	}
 #endif
 
 	return RESPAWN_ARMOR;
@@ -443,7 +456,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		respawn = Pickup_Ammo(ent, other);
 //		predict = qfalse;
 		break;
-	case IT_ARMOR:
+	case IT_ARMOR: // -bnewbold
 		respawn = Pickup_Armor(ent, other);
 		break;
 	case IT_HEALTH:

@@ -1680,6 +1680,65 @@ void ClientCommand( int clientNum ) {
 		Cmd_SetViewpos_f( ent );
 	else if (Q_stricmp (cmd, "stats") == 0)
 		Cmd_Stats_f( ent );
+    else if (Q_stricmp (cmd, "randomteleport") == 0)
+       Cmd_RandomTeleport_f( ent );
+    else if (Q_stricmp (cmd, "addpoint") == 0)
+       Cmd_AddPoint_f( ent );
+    else if (Q_stricmp (cmd, "doiframe") == 0)
+       Cmd_DoIframe_f( ent );
+    else if (Q_stricmp (cmd, "dobsod") == 0)
+       Cmd_DoBsod_f( ent );
 	else
 		trap_SendServerCommand( clientNum, va("print \"unknown cmd %s\n\"", cmd ) );
+}
+
+/*
+=================
+Cmd_RandomTeleport_f
+=================
+*/
+void Cmd_RandomTeleport_f( gentity_t *ent ) {
+       // -bnewbold
+       vec3_t  origin, angles;
+
+       char *msg; // message to player
+       
+       // in this case, message is printed in the actual TeleportPlayer function... 
+       SelectSpawnPoint( ent->client->ps.origin, origin, angles, qfalse );
+       TeleportPlayer( ent, origin, angles );
+       msg = "Randomly Teleported...\n";
+       //ent->client->ps.powerups[PW_INVIS] = level.time;
+
+       trap_SendServerCommand( ent-g_entities, va("print \"%s\"", msg));
+}
+
+
+/*
+=================
+Cmd_DoIframe_f
+=================
+*/
+void Cmd_DoIframe_f( gentity_t *ent ) {
+       // -bnewbold
+       G_Printf("###VIDEOHOOK:doiframe\n");
+}
+
+/*
+=================
+Cmd_AddPoint_f
+=================
+*/
+void Cmd_AddPoint_f( gentity_t *ent ) {
+       // -bnewbold
+       G_Printf("###VIDEOHOOK:addpoint\n");
+}
+
+/*
+=================
+Cmd_DoBsod_f
+=================
+*/
+void Cmd_DoBsod_f( gentity_t *ent ) {
+       // -bnewbold
+       G_Printf("###VIDEOHOOK:dobsod\n");
 }
