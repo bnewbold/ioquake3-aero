@@ -1704,7 +1704,7 @@ void Cmd_RandomTeleport_f( gentity_t *ent ) {
        char *msg; // message to player
        
        // in this case, message is printed in the actual TeleportPlayer function... 
-       SelectSpawnPoint( ent->client->ps.origin, origin, angles, qfalse );
+       SelectSpawnPoint( ent->client->ps.origin, origin, angles);
        TeleportPlayer( ent, origin, angles );
        msg = "Randomly Teleported...\n";
        //ent->client->ps.powerups[PW_INVIS] = level.time;
